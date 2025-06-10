@@ -60,7 +60,9 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.55f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\CharacterController.cs" />
+    <Compile Include="Assets\New Controls.cs" />
+    <Compile Include="Assets\CharacterCtrl.cs" />
+    <Compile Include="Assets\CameraCtrl.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
