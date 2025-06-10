@@ -20,11 +20,13 @@ public class CharacterCtrl : MonoBehaviour
 
     private float playerHeight;
     private bool canJump;
+    private ParticleSystem pSys;
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         playerHeight = GetComponent<SpriteRenderer>().bounds.size.y;
+        pSys = GetComponentInChildren<ParticleSystem>();
     }
 
     // Update is called once per frame
@@ -32,7 +34,7 @@ public class CharacterCtrl : MonoBehaviour
     {
         if (Physics2D.Raycast(rb.gameObject.transform.position, Vector2.down, (playerHeight / 2) + 0.2f, playerMask))
         {
-            Debug.Log("Grounded");
+            //Debug.Log("Grounded");
             canJump = true;
         }
         else
@@ -64,6 +66,13 @@ public class CharacterCtrl : MonoBehaviour
         //rb.AddForce(new Vector2(0, 10), ForceMode2D.Impulse);
         //Debug.Log("Jump");
         // = true;
+    }
+
+    private void OnAttack(InputValue _value)
+    {
+        Debug.Log("Attack");
+        pSys.Play();
+
     }
     
 }
