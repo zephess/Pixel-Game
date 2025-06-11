@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,11 +17,23 @@ public class CharacterCtrl : MonoBehaviour
     private float jumpForce;
 
     [SerializeField]
-    private LayerMask playerMask;
+    private LayerMask playerMask, enemyMask;
+ 
 
     private float playerHeight;
     private bool canJump;
     private ParticleSystem pSys;
+
+    [SerializeField]
+    private float attackRange;
+
+    [SerializeField]
+    private Transform attackPos;
+
+    [SerializeField]
+    private int damage;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -42,6 +55,14 @@ public class CharacterCtrl : MonoBehaviour
             canJump = false;
         }
         Debug.DrawRay(rb.gameObject.transform.position, Vector2.down * ((playerHeight / 2) +0.2f ), Color.red);
+        if(xVelocity > 0)
+        {
+            gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
+        else if(xVelocity < 0)
+        {
+            gameObject.transform.rotation = Quaternion.Euler(0, -180, 0); ;
+        }
     }
 
     private void FixedUpdate()
@@ -71,8 +92,18 @@ public class CharacterCtrl : MonoBehaviour
     private void OnAttack(InputValue _value)
     {
         Debug.Log("Attack");
-        pSys.Play();
-
+        //pSys.Play();
+        Collider2D[] enemiesHit = Physics2D.OverlapCircleAll(attackPos.position, attackRange, enemyMask);
+        for (int i = 0; i < enemiesHit.Length; i++)
+        {
+            enemiesHit[i].GetComponent<Enemy>().TakeDamage(gameObject.transform.position);
+        }
     }
-    
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(attackPos.position, attackRange);
+    }
+
 }
