@@ -32,7 +32,7 @@ public class CharacterCtrl : MonoBehaviour
 
     [SerializeField]
     private int damage;
-
+    private float jumpCooldown;
 
     // Start is called before the first frame update
     void Start()
@@ -40,12 +40,19 @@ public class CharacterCtrl : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         playerHeight = GetComponent<SpriteRenderer>().bounds.size.y;
         pSys = GetComponentInChildren<ParticleSystem>();
+        jumpCooldown = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Physics2D.Raycast(rb.gameObject.transform.position, Vector2.down, (playerHeight / 2) + 0.2f, playerMask))
+
+        if (jumpCooldown > 0)
+        {
+            jumpCooldown -= Time.deltaTime;
+        }
+       
+        if (Physics2D.Raycast(rb.gameObject.transform.position, Vector2.down, (playerHeight / 2) + 0.2f, playerMask) && jumpCooldown <= 0)
         {
             //Debug.Log("Grounded");
             canJump = true;
@@ -82,6 +89,8 @@ public class CharacterCtrl : MonoBehaviour
     {
         if(canJump)
         {
+            rb.velocity.Set(rb.velocity.x, 0f);
+            jumpCooldown = 0.5f;
             rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
         }
         //rb.AddForce(new Vector2(0, 10), ForceMode2D.Impulse);
